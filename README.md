@@ -1,2 +1,3 @@
-# chat-server
-microservices_course_chat-server
+# microservices_course_chat-server
+
+Chat-server
