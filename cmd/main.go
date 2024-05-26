@@ -6,7 +6,9 @@ import (
 	desc "github.com/noskov-sergey/chat-server/pkg/chat_v1"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
+	"google.golang.org/protobuf/types/known/emptypb"
 	"log"
+	"math/rand"
 	"net"
 )
 
@@ -17,11 +19,23 @@ type server struct {
 }
 
 func (s *server) Create(ctx context.Context, req *desc.CreateRequest) (*desc.CreateResponse, error) {
-	log.Printf("User id: %v", req.GetUsernames())
+	log.Printf("CreateMethod User names: %v", req.GetUsernames())
 
 	return &desc.CreateResponse{
-		Id: 2,
+		Id: int64(rand.Intn(100)),
 	}, nil
+}
+
+func (s *server) Delete(ctx context.Context, req *desc.DeleteRequest) (*emptypb.Empty, error) {
+	log.Printf("DeleteMethod - Chat id: %v", req.GetId())
+
+	return &emptypb.Empty{}, nil
+}
+
+func (s *server) SendMessage(ctx context.Context, req *desc.SendMessageRequest) (*emptypb.Empty, error) {
+	log.Printf("SendMessage - From id: %s, Text %s, TimeStamp: %d", req.GetFrom(), req.GetText(), req.GetTimestamp())
+
+	return &emptypb.Empty{}, nil
 }
 
 func main() {
