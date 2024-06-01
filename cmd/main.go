@@ -33,7 +33,7 @@ func (s *server) Delete(ctx context.Context, req *desc.DeleteRequest) (*emptypb.
 }
 
 func (s *server) SendMessage(ctx context.Context, req *desc.SendMessageRequest) (*emptypb.Empty, error) {
-	log.Printf("SendMessage - From id: %s, Text %sd", req.GetFrom(), req.GetText())
+	log.Printf("SendMessage - To chat_id: %d, From id: %s, Text %sd", req.GetChatId(), req.GetFrom(), req.GetText())
 
 	return &emptypb.Empty{}, nil
 }
