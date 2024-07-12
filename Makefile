@@ -40,3 +40,7 @@ local-migration-up:
 
 local-migration-down:
 	${LOCAL_BIN}/oose.exe -dir ${LOCAL_MIGRATION_DIR} postgres ${LOCAL_MIGRATION_DSN} down -v
+
+docker-chat-local-build-and-compose-up:
+	docker build --build-arg grpc_host={GRPC_HOST} --build-arg grpc_port=${GRPC_PORT} --build-arg pg_dsn=${PG_DSN} -t chat:latest .
+	docker-compose up -d
