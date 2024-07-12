@@ -4,7 +4,17 @@ volumes:
   postgres_volume:
 
 services:
-  pg_char_srv:
+  chat:
+    image: chat:latest
+    env_file:
+      - ./.env
+    ports:
+      - "${GRPC_PORT}:50052"
+    depends_on:
+      - db
+    restart: on-failure
+
+  db:
     image: postgres:14-alpine3.20
     environment:
       - "POSTGRES_DB=${PG_DATABASE_NAME}"
@@ -13,4 +23,12 @@ services:
     ports:
       - "${PG_PORT}:5432"
     volumes:
-      - postgres_volume:/var/lib/postgresql/data_chat
+      - postgres_volume:/var/lib/postgresql/data
+
+  migrator:
+    build:
+      context: .
+      dockerfile: migration.Dockerfile
+    restart: on-failure
+    env_file:
+      - ./.env
