@@ -3,14 +3,16 @@ package main
 import (
 	"context"
 	"flag"
-	"fmt"
-	sq "github.com/Masterminds/squirrel"
 	"github.com/jackc/pgx/v5/pgxpool"
+	chatApi "github.com/noskov-sergey/chat-server/internal/api/chats"
 	"github.com/noskov-sergey/chat-server/internal/config"
+	chatRepository "github.com/noskov-sergey/chat-server/internal/repository/chats"
+	messageRepository "github.com/noskov-sergey/chat-server/internal/repository/messages"
+	userRepository "github.com/noskov-sergey/chat-server/internal/repository/user"
+	chatUsecase "github.com/noskov-sergey/chat-server/internal/usecase/chats"
 	desc "github.com/noskov-sergey/chat-server/pkg/chat_v1"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
-	"google.golang.org/protobuf/types/known/emptypb"
 	"log"
 	"net"
 )
@@ -24,97 +26,6 @@ func init() {
 type server struct {
 	desc.UnimplementedChatV1Server
 	pool *pgxpool.Pool
-}
-
-func (s *server) Create(ctx context.Context, req *desc.CreateRequest) (*desc.CreateResponse, error) {
-	log.Printf("CreateMethod User names: %v", req.GetUsernames())
-
-	builder := sq.Insert("chats").
-		PlaceholderFormat(sq.Dollar).
-		Columns("id").
-		Values(sq.Expr("DEFAULT")).
-		Suffix("RETURNING id")
-
-	sqlQuery, args, err := builder.ToSql()
-	if err != nil {
-		log.Fatalf("to sql: %v", err)
-	}
-
-	var insertedID int
-
-	if err = s.pool.QueryRow(ctx, sqlQuery, args...).Scan(&insertedID); err != nil {
-		log.Printf("query row: %v", err)
-		return nil, fmt.Errorf("query row: %w", err)
-	}
-
-	for _, n := range req.Usernames {
-		builder_user := sq.Insert("chat_user").
-			PlaceholderFormat(sq.Dollar).
-			Columns("chat_id", "username").
-			Values(insertedID, n).
-			Suffix("RETURNING id")
-
-		sqlQuery, args, err = builder_user.ToSql()
-		if err != nil {
-			log.Fatalf("to sql: %v", err)
-		}
-
-		var insertedUserID int
-
-		if err = s.pool.QueryRow(ctx, sqlQuery, args...).Scan(&insertedUserID); err != nil {
-			log.Printf("query row: %v", err)
-			return nil, fmt.Errorf("query row: %w", err)
-		}
-	}
-
-	return &desc.CreateResponse{
-		Id: int64(insertedID),
-	}, nil
-}
-
-func (s *server) Delete(ctx context.Context, req *desc.DeleteRequest) (*emptypb.Empty, error) {
-	log.Printf("DeleteMethod - Chat id: %v", req.GetId())
-
-	builder := sq.
-		Delete("chats").
-		PlaceholderFormat(sq.Dollar).
-		Where("id = ?", int(req.Id))
-
-	sqlQuery, args, err := builder.ToSql()
-	if err != nil {
-		log.Fatalf("to sql: %v", err)
-	}
-
-	if _, err = s.pool.Exec(ctx, sqlQuery, args...); err != nil {
-		log.Printf("exec row: %v", err)
-		return nil, fmt.Errorf("exec row: %w", err)
-	}
-
-	return &emptypb.Empty{}, nil
-}
-
-func (s *server) SendMessage(ctx context.Context, req *desc.SendMessageRequest) (*emptypb.Empty, error) {
-	log.Printf("SendMessage - To chat_id: %d, From id: %s, Text %sd", req.GetChatId(), req.GetFrom(), req.GetText())
-
-	builder := sq.Insert("messages").
-		PlaceholderFormat(sq.Dollar).
-		Columns("username", "chat_id", "text").
-		Values(req.From, req.ChatId, req.Text).
-		Suffix("RETURNING id")
-
-	sqlQuery, args, err := builder.ToSql()
-	if err != nil {
-		log.Fatalf("to sql: %v", err)
-	}
-
-	var insertedID int
-
-	if err = s.pool.QueryRow(ctx, sqlQuery, args...).Scan(&insertedID); err != nil {
-		log.Printf("query row: %v", err)
-		return nil, fmt.Errorf("query row: %w", err)
-	}
-
-	return &emptypb.Empty{}, nil
 }
 
 func main() {
@@ -146,9 +57,15 @@ func main() {
 	}
 	defer pool.Close()
 
+	messageRep := messageRepository.NewMessagesRepository(pool)
+	userRep := userRepository.NewUserRepository(pool)
+	chatRep := chatRepository.NewChatRepository(pool)
+
+	usecase := chatUsecase.New(chatRep, userRep, messageRep)
+
 	s := grpc.NewServer()
 	reflection.Register(s)
-	desc.RegisterChatV1Server(s, &server{pool: pool})
+	desc.RegisterChatV1Server(s, chatApi.New(usecase))
 
 	log.Printf("server listening at %v", lis.Addr())
 
