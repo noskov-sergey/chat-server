@@ -6,7 +6,7 @@ import (
 	"github.com/noskov-sergey/chat-server/internal/model"
 )
 
-func (u *useCase) Create(ctx context.Context, users model.Users) (int, error) {
+func (u *UseCase) Create(ctx context.Context, users model.Users) (int, error) {
 	id, err := u.cRep.Create(ctx)
 	if err != nil {
 		return 0, fmt.Errorf("repository create: %w", err)

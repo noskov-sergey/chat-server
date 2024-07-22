@@ -3,6 +3,7 @@ package chats
 import (
 	"context"
 	"github.com/noskov-sergey/chat-server/internal/model"
+	chatUsecase "github.com/noskov-sergey/chat-server/internal/usecase/chats"
 	desc "github.com/noskov-sergey/chat-server/pkg/chat_v1"
 )
 
@@ -12,14 +13,14 @@ type Usecase interface {
 	SendMessage(ctx context.Context, m model.Message) error
 }
 
-type implementation struct {
+type Implementation struct {
 	desc.UnimplementedChatV1Server
 	usecase Usecase
 }
 
-func New(u Usecase) *implementation {
-	return &implementation{
+func New(u chatUsecase.UseCase) *Implementation {
+	return &Implementation{
 		desc.UnimplementedChatV1Server{},
-		u,
+		&u,
 	}
 }
