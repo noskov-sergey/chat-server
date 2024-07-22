@@ -7,7 +7,7 @@ import (
 	desc "github.com/noskov-sergey/chat-server/pkg/chat_v1"
 )
 
-func (i *implementation) Create(ctx context.Context, req *desc.CreateRequest) (*desc.CreateResponse, error) {
+func (i *Implementation) Create(ctx context.Context, req *desc.CreateRequest) (*desc.CreateResponse, error) {
 	id, err := i.usecase.Create(ctx, converter.ToServiceFromChats(req))
 	if err != nil {
 		return nil, fmt.Errorf("usecase create: %w", err)

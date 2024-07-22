@@ -18,14 +18,14 @@ type MessageRepository interface {
 	Create(ctx context.Context, m model.Message) error
 }
 
-type useCase struct {
+type UseCase struct {
 	cRep ChatRepository
 	uRep UserRepository
 	mRep MessageRepository
 }
 
-func New(cRep ChatRepository, uRep UserRepository, mRep MessageRepository) *useCase {
-	return &useCase{
+func New(cRep ChatRepository, uRep UserRepository, mRep MessageRepository) *UseCase {
+	return &UseCase{
 		cRep: cRep,
 		uRep: uRep,
 		mRep: mRep,
