@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	sq "github.com/Masterminds/squirrel"
+	"github.com/noskov-sergey/chat-server/internal/client/db"
 )
 
 func (r *Repository) Create(ctx context.Context) (int, error) {
@@ -18,10 +19,15 @@ func (r *Repository) Create(ctx context.Context) (int, error) {
 		return 0, fmt.Errorf("to sql: %w", err)
 	}
 
-	var insertedID int
+	q := db.Query{
+		Name:     "chats_repository.Create",
+		QueryRaw: sqlQuery,
+	}
 
-	if err = r.db.QueryRow(ctx, sqlQuery, args...).Scan(&insertedID); err != nil {
-		return 0, fmt.Errorf("query row: %w", err)
+	var insertedID int
+	err = r.db.DB().ScanOneContext(ctx, &insertedID, q, args...)
+	if err != nil {
+		return 0, err
 	}
 
 	return insertedID, nil

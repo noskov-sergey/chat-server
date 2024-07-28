@@ -1,16 +1,18 @@
 package user
 
-import "github.com/jackc/pgx/v5/pgxpool"
+import (
+	"github.com/noskov-sergey/chat-server/internal/client/db"
+)
 
 const (
 	tableName = "chat_user"
 )
 
 type Repository struct {
-	db *pgxpool.Pool
+	db db.Client
 }
 
-func NewUserRepository(db *pgxpool.Pool) *Repository {
+func NewUserRepository(db db.Client) *Repository {
 	return &Repository{
 		db: db,
 	}

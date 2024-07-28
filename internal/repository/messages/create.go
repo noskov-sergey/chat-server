@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	sq "github.com/Masterminds/squirrel"
+	"github.com/noskov-sergey/chat-server/internal/client/db"
 	"github.com/noskov-sergey/chat-server/internal/model"
 )
 
@@ -18,7 +19,12 @@ func (r *Repository) Create(ctx context.Context, m model.Message) error {
 		return fmt.Errorf("to sql: %w", err)
 	}
 
-	ct, err := r.db.Exec(ctx, sqlQuery, args...)
+	q := db.Query{
+		Name:     "messages_repository.Create",
+		QueryRaw: sqlQuery,
+	}
+
+	ct, err := r.db.DB().ExecContext(ctx, q, args...)
 	if err != nil {
 		return fmt.Errorf("exec: %w", err)
 	}
