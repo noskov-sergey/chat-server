@@ -2,6 +2,7 @@ package chats
 
 import (
 	"context"
+	"github.com/noskov-sergey/chat-server/internal/client/db"
 	"github.com/noskov-sergey/chat-server/internal/model"
 )
 
@@ -19,15 +20,17 @@ type MessageRepository interface {
 }
 
 type UseCase struct {
-	cRep ChatRepository
-	uRep UserRepository
-	mRep MessageRepository
+	cRep      ChatRepository
+	uRep      UserRepository
+	mRep      MessageRepository
+	txManager db.TxManager
 }
 
-func New(cRep ChatRepository, uRep UserRepository, mRep MessageRepository) *UseCase {
+func New(cRep ChatRepository, uRep UserRepository, mRep MessageRepository, txManager db.TxManager) *UseCase {
 	return &UseCase{
-		cRep: cRep,
-		uRep: uRep,
-		mRep: mRep,
+		cRep:      cRep,
+		uRep:      uRep,
+		mRep:      mRep,
+		txManager: txManager,
 	}
 }

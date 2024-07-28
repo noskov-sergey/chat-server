@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	sq "github.com/Masterminds/squirrel"
+	"github.com/noskov-sergey/chat-server/internal/client/db"
 	"log"
 )
 
@@ -18,8 +19,12 @@ func (r *Repository) Delete(ctx context.Context, chatID int) error {
 		log.Fatalf("to sql: %v", err)
 	}
 
-	if _, err = r.db.Exec(ctx, sqlQuery, args...); err != nil {
-		log.Printf("exec row: %v", err)
+	q := db.Query{
+		Name:     "chats_repository.Delete",
+		QueryRaw: sqlQuery,
+	}
+
+	if _, err = r.db.DB().ExecContext(ctx, q, args...); err != nil {
 		return fmt.Errorf("exec row: %w", err)
 	}
 

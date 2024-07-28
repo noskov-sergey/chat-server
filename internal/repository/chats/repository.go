@@ -1,6 +1,8 @@
 package chats
 
-import "github.com/jackc/pgx/v5/pgxpool"
+import (
+	"github.com/noskov-sergey/chat-server/internal/client/db"
+)
 
 const (
 	tableName = "chats"
@@ -9,10 +11,10 @@ const (
 )
 
 type Repository struct {
-	db *pgxpool.Pool
+	db db.Client
 }
 
-func NewChatRepository(db *pgxpool.Pool) *Repository {
+func NewChatRepository(db db.Client) *Repository {
 	return &Repository{
 		db: db,
 	}
