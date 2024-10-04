@@ -1,6 +1,8 @@
 package messages
 
-import "github.com/jackc/pgx/v5/pgxpool"
+import (
+	"github.com/noskov-sergey/platform-common/pkg/db"
+)
 
 const (
 	tableName = "messages"
@@ -11,10 +13,10 @@ const (
 )
 
 type Repository struct {
-	db *pgxpool.Pool
+	db db.Client
 }
 
-func NewMessagesRepository(db *pgxpool.Pool) *Repository {
+func NewMessagesRepository(db db.Client) *Repository {
 	return &Repository{
 		db: db,
 	}

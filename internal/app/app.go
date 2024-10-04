@@ -2,14 +2,16 @@ package app
 
 import (
 	"context"
-	"github.com/noskov-sergey/chat-server/internal/closer"
+	"log"
+	"net"
+
 	"github.com/noskov-sergey/chat-server/internal/config"
 	desc "github.com/noskov-sergey/chat-server/pkg/chat_v1"
+	"github.com/noskov-sergey/platform-common/pkg/closer"
+
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 	"google.golang.org/grpc/reflection"
-	"log"
-	"net"
 )
 
 type App struct {

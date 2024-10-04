@@ -2,9 +2,12 @@ package chats
 
 import (
 	"context"
+
 	"github.com/noskov-sergey/chat-server/internal/model"
+	"github.com/noskov-sergey/platform-common/pkg/db"
 )
 
+//go:generate mockgen -source usecase.go -destination mocks/mocks.go -typed true Repository
 type ChatRepository interface {
 	Create(ctx context.Context) (int, error)
 	Delete(ctx context.Context, chatID int) error
@@ -19,15 +22,17 @@ type MessageRepository interface {
 }
 
 type UseCase struct {
-	cRep ChatRepository
-	uRep UserRepository
-	mRep MessageRepository
+	cRep      ChatRepository
+	uRep      UserRepository
+	mRep      MessageRepository
+	txManager db.TxManager
 }
 
-func New(cRep ChatRepository, uRep UserRepository, mRep MessageRepository) *UseCase {
+func New(cRep ChatRepository, uRep UserRepository, mRep MessageRepository, txManager db.TxManager) *UseCase {
 	return &UseCase{
-		cRep: cRep,
-		uRep: uRep,
-		mRep: mRep,
+		cRep:      cRep,
+		uRep:      uRep,
+		mRep:      mRep,
+		txManager: txManager,
 	}
 }

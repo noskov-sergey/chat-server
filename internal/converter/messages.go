@@ -5,7 +5,7 @@ import (
 	desc "github.com/noskov-sergey/chat-server/pkg/chat_v1"
 )
 
-func ToServiceFromMessages(req *desc.SendMessageRequest) model.Message {
+func ToServiceFromMessages(req *desc.CreateMessageRequest) model.Message {
 	return model.Message{
 		Username: req.GetFrom(),
 		ChatId:   int(req.GetChatId()),
