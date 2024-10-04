@@ -2,14 +2,16 @@ package app
 
 import (
 	"context"
-	"github.com/noskov-sergey/chat-server/internal/client/db"
-	"github.com/noskov-sergey/chat-server/internal/client/db/pg"
-	"github.com/noskov-sergey/chat-server/internal/closer"
+
+	"github.com/noskov-sergey/platform-common/pkg/closer"
+	"github.com/noskov-sergey/platform-common/pkg/db"
+	"github.com/noskov-sergey/platform-common/pkg/db/pg"
+	"github.com/noskov-sergey/platform-common/pkg/db/transaction"
+
 	"github.com/noskov-sergey/chat-server/internal/config"
 	"log"
 
 	chatApi "github.com/noskov-sergey/chat-server/internal/api/chats"
-	transaction "github.com/noskov-sergey/chat-server/internal/client/db/transaction"
 	chatRepository "github.com/noskov-sergey/chat-server/internal/repository/chats"
 	messageRepository "github.com/noskov-sergey/chat-server/internal/repository/messages"
 	userRepository "github.com/noskov-sergey/chat-server/internal/repository/user"

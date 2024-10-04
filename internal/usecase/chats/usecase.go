@@ -3,8 +3,8 @@ package chats
 import (
 	"context"
 
-	"github.com/noskov-sergey/chat-server/internal/client/db"
 	"github.com/noskov-sergey/chat-server/internal/model"
+	"github.com/noskov-sergey/platform-common/pkg/db"
 )
 
 //go:generate mockgen -source usecase.go -destination mocks/mocks.go -typed true Repository

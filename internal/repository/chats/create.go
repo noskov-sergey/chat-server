@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 	sq "github.com/Masterminds/squirrel"
-	"github.com/noskov-sergey/chat-server/internal/client/db"
+	"github.com/noskov-sergey/platform-common/pkg/db"
 )
 
 func (r *Repository) Create(ctx context.Context) (int, error) {
