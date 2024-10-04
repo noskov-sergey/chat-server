@@ -2,14 +2,15 @@ package chats
 
 import (
 	"context"
+	"log"
+	"net"
+	"testing"
+
 	"go.uber.org/mock/gomock"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 	"google.golang.org/grpc/test/bufconn"
 	"google.golang.org/protobuf/types/known/timestamppb"
-	"log"
-	"net"
-	"testing"
 
 	mock_file "github.com/noskov-sergey/chat-server/internal/api/chats/mocks"
 	chat "github.com/noskov-sergey/chat-server/pkg/chat_v1"

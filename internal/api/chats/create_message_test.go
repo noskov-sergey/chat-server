@@ -2,10 +2,11 @@ package chats
 
 import (
 	"context"
+	"testing"
+
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"go.uber.org/mock/gomock"
-	"testing"
 )
 
 func TestImplementation_CreateMessage_Success(t *testing.T) {

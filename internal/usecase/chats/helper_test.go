@@ -5,9 +5,9 @@ import (
 
 	"go.uber.org/mock/gomock"
 
-	"github.com/noskov-sergey/chat-server/internal/client/db"
 	"github.com/noskov-sergey/chat-server/internal/model"
 	mock_file "github.com/noskov-sergey/chat-server/internal/usecase/chats/mocks"
+	"github.com/noskov-sergey/platform-common/pkg/db"
 )
 
 var (

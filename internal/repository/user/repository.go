@@ -1,7 +1,7 @@
 package user
 
 import (
-	"github.com/noskov-sergey/chat-server/internal/client/db"
+	"github.com/noskov-sergey/platform-common/pkg/db"
 )
 
 const (
