@@ -112,7 +112,7 @@ func (s *serviceProvider) MessageRepository(ctx context.Context) *messageReposit
 	return s.mRep
 }
 
-func (s *serviceProvider) ChatUsecase(ctx context.Context) chatUsecase.UseCase {
+func (s *serviceProvider) ChatUsecase(ctx context.Context) *chatUsecase.UseCase {
 	if s.chatUsecase == nil {
 		s.chatUsecase = chatUsecase.New(
 			s.ChatRepository(ctx),
@@ -122,7 +122,7 @@ func (s *serviceProvider) ChatUsecase(ctx context.Context) chatUsecase.UseCase {
 		)
 	}
 
-	return *s.chatUsecase
+	return s.chatUsecase
 }
 
 func (s *serviceProvider) CImpl(ctx context.Context) *chatApi.Implementation {

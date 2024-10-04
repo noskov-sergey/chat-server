@@ -2,10 +2,11 @@ package chats
 
 import (
 	"context"
+
 	"github.com/noskov-sergey/chat-server/internal/model"
 )
 
-func (u *UseCase) Create(ctx context.Context, users model.Users) (int, error) {
+func (u *UseCase) CreateChat(ctx context.Context, users model.Users) (int, error) {
 	var id int
 	err := u.txManager.ReadCommitted(ctx, func(ctx context.Context) error {
 		var errTx error
@@ -34,5 +35,4 @@ func (u *UseCase) Create(ctx context.Context, users model.Users) (int, error) {
 	}
 
 	return id, nil
-
 }
