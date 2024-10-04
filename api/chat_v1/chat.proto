@@ -8,16 +8,16 @@ import "google/protobuf/empty.proto";
 option go_package = "github.com/noskov-sergey/chat-server/pkg/chat_v1;chat_v1";
 
 service ChatV1 {
-  rpc Create(CreateRequest) returns (CreateResponse);
+  rpc CreateChat(CreateChatRequest) returns (CreateChatResponse);
   rpc Delete(DeleteRequest) returns (google.protobuf.Empty);
-  rpc SendMessage(SendMessageRequest) returns (google.protobuf.Empty);
+  rpc CreateMessage(CreateMessageRequest) returns (google.protobuf.Empty);
 }
 
-message CreateRequest {
+message CreateChatRequest {
   repeated string usernames = 1;
 }
 
-message CreateResponse {
+message CreateChatResponse {
   int64 id = 1;
 }
 
@@ -25,7 +25,7 @@ message DeleteRequest {
   int64 id = 1;
 }
 
-message SendMessageRequest {
+message CreateMessageRequest {
   int64 chat_id = 1;
   string from = 2;
   string text = 3;

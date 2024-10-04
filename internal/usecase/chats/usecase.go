@@ -2,10 +2,12 @@ package chats
 
 import (
 	"context"
+
 	"github.com/noskov-sergey/chat-server/internal/client/db"
 	"github.com/noskov-sergey/chat-server/internal/model"
 )
 
+//go:generate mockgen -source usecase.go -destination mocks/mocks.go -typed true Repository
 type ChatRepository interface {
 	Create(ctx context.Context) (int, error)
 	Delete(ctx context.Context, chatID int) error

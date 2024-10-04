@@ -2,15 +2,18 @@ package chats
 
 import (
 	"context"
-	"github.com/noskov-sergey/chat-server/internal/model"
-	chatUsecase "github.com/noskov-sergey/chat-server/internal/usecase/chats"
+
 	desc "github.com/noskov-sergey/chat-server/pkg/chat_v1"
+
+	"github.com/noskov-sergey/chat-server/internal/model"
 )
 
+//go:generate mockgen -source service.go -destination mocks/mocks.go -typed true Usecase
+
 type Usecase interface {
-	Create(ctx context.Context, users model.Users) (int, error)
+	CreateChat(ctx context.Context, users model.Users) (int, error)
 	Delete(ctx context.Context, chatID int) error
-	SendMessage(ctx context.Context, m model.Message) error
+	CreateMessage(ctx context.Context, m model.Message) error
 }
 
 type Implementation struct {
@@ -18,9 +21,9 @@ type Implementation struct {
 	usecase Usecase
 }
 
-func New(u chatUsecase.UseCase) *Implementation {
+func New(u Usecase) *Implementation {
 	return &Implementation{
 		desc.UnimplementedChatV1Server{},
-		&u,
+		u,
 	}
 }
