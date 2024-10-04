@@ -4,13 +4,28 @@ package chat_v1;
 
 import "google/protobuf/timestamp.proto";
 import "google/protobuf/empty.proto";
+import "google/api/annotations.proto";
 
 option go_package = "github.com/noskov-sergey/chat-server/pkg/chat_v1;chat_v1";
 
 service ChatV1 {
-  rpc CreateChat(CreateChatRequest) returns (CreateChatResponse);
-  rpc Delete(DeleteRequest) returns (google.protobuf.Empty);
-  rpc CreateMessage(CreateMessageRequest) returns (google.protobuf.Empty);
+  rpc CreateChat(CreateChatRequest) returns (CreateChatResponse){
+    option (google.api.http) = {
+      post: "/chat/v1/create-chat"
+      body: "*"
+    };
+  };
+  rpc Delete(DeleteRequest) returns (google.protobuf.Empty){
+    option (google.api.http) = {
+      delete: "/chat/v1"
+    };
+  };
+  rpc CreateMessage(CreateMessageRequest) returns (google.protobuf.Empty){
+    option (google.api.http) = {
+      post: "/chat/v1/create-message"
+      body: "*"
+    };
+  };
 }
 
 message CreateChatRequest {
