@@ -4,6 +4,7 @@ go 1.23.2
 
 require (
 	github.com/Masterminds/squirrel v1.5.4
+	github.com/envoyproxy/protoc-gen-validate v1.0.4
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.22.0
 	github.com/joho/godotenv v1.5.1
 	github.com/noskov-sergey/platform-common v0.0.0-20241004054942-04d98968df36

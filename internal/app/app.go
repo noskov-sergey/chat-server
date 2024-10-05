@@ -2,19 +2,20 @@ package app
 
 import (
 	"context"
-	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"log"
 	"net"
 	"net/http"
 	"sync"
 
-	"github.com/noskov-sergey/chat-server/internal/config"
-	desc "github.com/noskov-sergey/chat-server/pkg/chat_v1"
-	"github.com/noskov-sergey/platform-common/pkg/closer"
-
+	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 	"google.golang.org/grpc/reflection"
+
+	"github.com/noskov-sergey/chat-server/internal/config"
+	"github.com/noskov-sergey/chat-server/internal/interceptor"
+	desc "github.com/noskov-sergey/chat-server/pkg/chat_v1"
+	"github.com/noskov-sergey/platform-common/pkg/closer"
 )
 
 type App struct {
@@ -98,7 +99,10 @@ func (a *App) initServiceProvider(_ context.Context) error {
 }
 
 func (a *App) initGRPCServer(ctx context.Context) error {
-	a.grpcServer = grpc.NewServer(grpc.Creds(insecure.NewCredentials()))
+	a.grpcServer = grpc.NewServer(
+		grpc.Creds(insecure.NewCredentials()),
+		grpc.UnaryInterceptor(interceptor.ValidateInterceptor),
+	)
 
 	reflection.Register(a.grpcServer)
 

@@ -20,7 +20,7 @@ type pgConfig struct {
 func NewPGConfig() (PGConfig, error) {
 	dsn := os.Getenv(pgDSNEnvName)
 	if len(dsn) == 0 {
-		return nil, errors.New("grpc host not found")
+		return nil, errors.New("pg host not found")
 	}
 
 	return &pgConfig{
