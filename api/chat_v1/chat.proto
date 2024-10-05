@@ -4,30 +4,64 @@ package chat_v1;
 
 import "google/protobuf/timestamp.proto";
 import "google/protobuf/empty.proto";
+import "google/api/annotations.proto";
+import "validate/validate.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
 
 option go_package = "github.com/noskov-sergey/chat-server/pkg/chat_v1;chat_v1";
 
+option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
+  info: {
+    title: "Auth API"
+    version: "1.0.0"
+    contact: {
+      name: "Noskov Sergey"
+      email: "noskov.sergey@mail.ru"
+    };
+  };
+
+  host: "localhost:8082",
+  schemes: HTTP,
+  schemes: HTTPS,
+  consumes: "application/json",
+  produces: "application/json",
+};
+
 service ChatV1 {
-  rpc CreateChat(CreateChatRequest) returns (CreateChatResponse);
-  rpc Delete(DeleteRequest) returns (google.protobuf.Empty);
-  rpc CreateMessage(CreateMessageRequest) returns (google.protobuf.Empty);
+  rpc CreateChat(CreateChatRequest) returns (CreateChatResponse){
+    option (google.api.http) = {
+      post: "/chat/v1/create-chat"
+      body: "*"
+    };
+  };
+  rpc Delete(DeleteRequest) returns (google.protobuf.Empty){
+    option (google.api.http) = {
+      delete: "/chat/v1"
+    };
+  };
+  rpc CreateMessage(CreateMessageRequest) returns (google.protobuf.Empty){
+    option (google.api.http) = {
+      post: "/chat/v1/create-message"
+      body: "*"
+    };
+  };
 }
 
 message CreateChatRequest {
-  repeated string usernames = 1;
+  repeated string usernames = 1 [(validate.rules).repeated = {min_items: 2, unique: true}];
 }
 
 message CreateChatResponse {
-  int64 id = 1;
+  int64 id = 1 [(validate.rules).int64.gte = 1];
 }
 
 message DeleteRequest {
-  int64 id = 1;
+  int64 id = 1 [(validate.rules).int64.gte = 1];
 }
 
 message CreateMessageRequest {
-  int64 chat_id = 1;
-  string from = 2;
-  string text = 3;
+  int64 chat_id = 1 [(validate.rules).int64.gte = 1];
+  string from = 2 [(validate.rules).string = {min_len: 1, max_len: 128}];
+  string text = 3 [(validate.rules).string = {min_len: 1, max_len: 512}];
   google.protobuf.Timestamp timestamp = 4;
 }
